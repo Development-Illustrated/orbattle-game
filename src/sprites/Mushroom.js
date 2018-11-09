@@ -9,14 +9,11 @@ class Mushroom extends Phaser.Sprite {
   }
 
   update () {
-    // if (this.position.y > document.documentElement.clientHeight / 4) {
-    //   this.body.gravity.y = 10000
-    // }
     if (this.cursors.left.isDown) {
-      this.body.angle.x -= 10
+      this.body.velocity.x -= 10
     }
     if (this.cursors.right.isDown) {
-      this.body.angle.x += 10
+      this.body.velocity.x += 10
     }
   }
 }
