@@ -18,6 +18,7 @@ export default class extends Phaser.State {
     })
 
     this.game.physics.enable(this.mushroom)
+
     this.game.add.existing(this.mushroom)
   }
 
