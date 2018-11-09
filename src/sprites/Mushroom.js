@@ -10,10 +10,10 @@ class Mushroom extends Phaser.Sprite {
 
   update () {
     if (this.cursors.left.isDown) {
-      this.body.velocity.x -= 10
+      this.angle -= 10
     }
     if (this.cursors.right.isDown) {
-      this.body.velocity.x += 10
+      this.angle += 10
     }
   }
 }
