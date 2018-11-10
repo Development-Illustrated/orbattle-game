@@ -21,7 +21,7 @@ class Mushroom extends Phaser.Sprite {
     this.game.world.setBounds(0, 0, 1400, 799);
     this.size.setTo(0, 0, 1200, 670);
     this.game.camera.focusOnXY(700, 399);
-    this.zoomAmount = 0.003
+    this.zoomAmount = 0.002
   }
 
   update () {
