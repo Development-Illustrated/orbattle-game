@@ -12,7 +12,7 @@ class Pistol extends Weapon{
     constructor(game, parent){
         super(game, parent)
         //Velocity kickback to mave a player
-        this.recoil = 30;
+        this.recoil = 300;
     }
 }
 

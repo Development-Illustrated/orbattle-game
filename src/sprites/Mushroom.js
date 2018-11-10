@@ -35,12 +35,8 @@ class Mushroom extends Phaser.Sprite {
       this.body.angularAcceleration = 200
     }
 
-    if (this.boomBoom.isDown) {
-      this.game.physics.arcade.velocityFromAngle(this.angle, -1000, this.body.velocity);
-    }
     if (this.spaceKey.isDown){
-      this.body.velocity.x += this.weapon.recoil
-      this.body.drag = 50
+      this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
     }
 
   }
