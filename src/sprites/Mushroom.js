@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import {Pistol} from '../weapons/Weapon'
+import { PluginManager } from 'phaser-ce';
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
@@ -15,8 +16,17 @@ class Mushroom extends Phaser.Sprite {
     this.body.bounce.setTo(1, 1)
     this.cursors = this.game.input.keyboard.createCursorKeys()
     this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.weapon = new Pistol(this.game, this)
-  }
+
+    // this.pistol = new Pistol(this.game, new PluginManager());
+    // this.weapon = this.game.add.existing(this.pistol);
+    console.log(this.weapon = this.game.add.weapon(100,'bullet'));
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    this.weapon.trackSprite(this, 14,0);
+    this.weapon.trackRotation = true;
+    
+    // this.weapon = this.game.add.weapon(10,'bullet');
+    // this.weapon.fireFrom.set(10,5);
+    }
 
   update () {
     console.log(this.rotation)
@@ -36,7 +46,8 @@ class Mushroom extends Phaser.Sprite {
     }
 
     if (this.spaceKey.isDown){
-      this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
+      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity);
+      this.weapon.fire()
     }
 
   }
