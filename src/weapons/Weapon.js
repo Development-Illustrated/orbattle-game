@@ -1,31 +1,35 @@
 class Weapon extends Phaser.Weapon {
-
-    
-    constructor(){
+    constructor(game, parent){
+        super(game, parent)
         //do something
+        this.recoil = 0;
     }
 
-    get recoil(){
-        return this.recoil;
-    }
 };
 
 class Pistol extends Weapon{
     
-    constructor(){
+    constructor(game, parent){
+        super(game, parent)
         //Velocity kickback to mave a player
-        this.recoil = 25;
+        this.recoil = 30;
     }
 }
 
 class MachineGun extends Weapon {
-    constructor(){
+    constructor(game, parent){
+        super(game, parent)
         this.recoil = 10;
     }
+    
 }
 
 class Sniper extends Weapon {
-    constructor(){
-        this.recoil = 500;
+    constructor(game, parent){
+        super(game, parent)
+        this.recoil = 100;
     }
 }
+
+
+export {Weapon, Pistol}

@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import {Pistol} from '../weapons/Weapon'
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
@@ -6,8 +7,8 @@ class Mushroom extends Phaser.Sprite {
     this.anchor.setTo(0.5)
     this.game = game
     this.cursors = this.game.input.keyboard.createCursorKeys()
-    this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.weapon = new Pistol()
+    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.weapon = new Pistol(this.game, this)
   }
 
   update () {
@@ -19,7 +20,7 @@ class Mushroom extends Phaser.Sprite {
     }
     if (this.spaceKey.isDown){
       this.body.velocity.x += this.weapon.recoil
-      //this.body.
+      this.body.drag = 50
     }
 
   }
