@@ -4,7 +4,7 @@ import Mushroom from '../sprites/Mushroom'
 export default class extends Phaser.State {
   init () {
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
-    this.game.physics.arcade.gravity.y = 0
+    // this.game.physics.arcade.gravity.y = 10
   }
 
   preload () { }
@@ -16,8 +16,7 @@ export default class extends Phaser.State {
       y: 32,
       asset: 'mushroom'
     })
-
-
+    
     this.game.add.existing(this.mushroom)
   }
 
