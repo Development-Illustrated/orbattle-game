@@ -6,6 +6,8 @@ class Mushroom extends Phaser.Sprite {
     this.anchor.setTo(0.5)
     this.game = game
     this.cursors = this.game.input.keyboard.createCursorKeys()
+    this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.weapon = new Pistol()
   }
 
   update () {
@@ -15,6 +17,11 @@ class Mushroom extends Phaser.Sprite {
     if (this.cursors.right.isDown) {
       this.body.velocity.x += 10
     }
+    if (this.spaceKey.isDown){
+      this.body.velocity.x += this.weapon.recoil
+      //this.body.
+    }
+
   }
 }
 
