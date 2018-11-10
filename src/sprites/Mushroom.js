@@ -10,11 +10,32 @@ class Mushroom extends Phaser.Sprite {
 
   update () {
     if (this.cursors.left.isDown) {
-      this.angle -= 10
+      this.body.angularDrag = -5
+      this.body.angularAcceleration = 10
+      this.body.maxAngular = -20
+      //this.angle -= TURN_SPEED
+      //this.speedOfRotation = -TURN_SPEED
     }
-    if (this.cursors.right.isDown) {
-      this.angle += 10
+
+    else if (this.cursors.right.isDown) {
+      //this.angle += TURN_SPEED
+      //this.speedOfRotation = TURN_SPEED
+      this.body.angularDrag = 5
+      this.body.angularAcceleration = -10
+      this.body.maxAngular = 20
     }
+
+    /*else {
+      if (this.speedOfRotation < 0) {
+        this.speedOfRotation = this.speedOfRotation + 0.2
+        this.angle += this.speedOfRotation
+      }
+      
+      else if (this.speedOfRotation > 0) {
+        this.speedOfRotation = this.speedOfRotation - 0.2
+        this.angle += this.speedOfRotation
+      }
+    }*/
   }
 }
 
