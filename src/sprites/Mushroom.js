@@ -11,16 +11,13 @@ class Mushroom extends Phaser.Sprite {
     this.body.angularDrag = 100
     this.body.maxAngular = 1000
     this.body.drag = { x: 150, y: 150 }
-    this.body.collideWorldBounds = true
-    this.body.bounce.setTo(1, 1)
+    this.body.collideWorldBounds = false
     this.cursors = this.game.input.keyboard.createCursorKeys()
     this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     this.weapon = new Pistol(this.game, this)
   }
 
   update () {
-    console.log(this.rotation)
-    console.log(this.angle)
     this.body.angularAcceleration = 0
 
     if (this.cursors.up.isDown) {
@@ -39,6 +36,10 @@ class Mushroom extends Phaser.Sprite {
       this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
     }
 
+    if (this.body.y > game.world.height - this.body.height) this.kill()
+    if (this.body.x > game.world.width - this.body.width) this.kill()
+    if (this.body.y < 0) this.kill()
+    if (this.body.x < 0) this.kill()
   }
 }
 
