@@ -9,7 +9,7 @@ class Mushroom extends Phaser.Sprite {
     this.game.physics.enable(this)
     this.body.angularDrag = 100
     this.body.maxAngular = 1000
-    this.body.drag = { x: 1500, y: 1500 }
+    this.body.drag = { x: 150, y: 150 }
     this.body.collideWorldBounds = true
     this.body.bounce.setTo(1, 1)
     this.cursors = this.game.input.keyboard.createCursorKeys()
@@ -17,9 +17,8 @@ class Mushroom extends Phaser.Sprite {
   }
 
   update () {
-
     this.body.angularAcceleration = 0
-    
+
     if (this.cursors.up.isDown) {
       this.game.physics.arcade.accelerationFromRotation(this.rotation, 50, this.body.acceleration)
     } else {
@@ -28,12 +27,10 @@ class Mushroom extends Phaser.Sprite {
 
     if (this.cursors.left.isDown) {
       this.body.angularAcceleration = -200
-    }
-
-    else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown) {
       this.body.angularAcceleration = 200
     }
-    
+
     if (this.boomBoom.isDown) {
       this.game.physics.arcade.accelerationFromRotation(this.rotation, 500, this.body.acceleration)
     }
