@@ -21,7 +21,13 @@ class Mushroom extends Phaser.Sprite {
     this.game.world.setBounds(0, 0, 1400, 799);
     this.size.setTo(0, 0, 1200, 670);
     this.game.camera.focusOnXY(700, 399);
-    this.zoomAmount = 0.003
+    this.zoomAmount = 0.002
+
+    this.style = { font: "12px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: this.body.width, align: "center" }
+    this.text = this.game.add.text(0, 0, "Player Name", this.style);
+    this.text.anchor.set(0.5);
+    this.text.x = Math.floor(this.body.x + this.body.width)
+    this.text.y = Math.floor(this.body.y + this.body.height)
   }
 
   update () {
@@ -74,6 +80,9 @@ class Mushroom extends Phaser.Sprite {
         this.game.camera.bounds.height = this.size.height * this.game.camera.scale.y
       }
     }
+
+    this.text.x = Math.floor(this.body.x + (this.body.width / 2))
+    this.text.y = Math.floor(this.body.y)
   }
 }
 
