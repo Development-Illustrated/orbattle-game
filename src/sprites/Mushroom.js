@@ -17,10 +17,13 @@ class Mushroom extends Phaser.Sprite {
   }
 
   update () {
+    console.log(this.rotation)
+    console.log(this.angle)
     this.body.angularAcceleration = 0
 
     if (this.cursors.up.isDown) {
-      this.game.physics.arcade.accelerationFromRotation(this.rotation, 50, this.body.acceleration)
+      //this.game.physics.arcade.accelerationFromRotation(this.angle, -500, this.body.acceleration)
+      this.game.physics.arcade.velocityFromAngle(this.angle, -300, this.body.velocity);
     } else {
       this.body.acceleration.set(0)
     }
