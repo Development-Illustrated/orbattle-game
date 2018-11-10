@@ -4,7 +4,7 @@ class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
     super(game, x, y, asset)
 
-    this.anchor.setTo(0.48)
+    this.anchor.setTo(0.5)
     this.game = game
     this.cursors = game.input.keyboard.createCursorKeys()
     this.boomBoom = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
