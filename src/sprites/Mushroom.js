@@ -32,7 +32,7 @@ class Mushroom extends Phaser.Sprite {
     }
 
     if (this.boomBoom.isDown) {
-      this.game.physics.arcade.accelerationFromRotation(this.rotation, 500, this.body.acceleration)
+      this.game.physics.arcade.accelerationFromRotation(this.rotation, -500, this.body.acceleration)
     }
   }
 }
