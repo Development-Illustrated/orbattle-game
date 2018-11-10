@@ -36,10 +36,13 @@ class Mushroom extends Phaser.Sprite {
       this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
     }
 
-    if (this.body.y > game.world.height - this.body.height) this.kill()
-    if (this.body.x > game.world.width - this.body.width) this.kill()
-    if (this.body.y < 0) this.kill()
-    if (this.body.x < 0) this.kill()
+    if (this.body.y > game.world.height - this.body.height || 
+      this.body.x > game.world.width - this.body.width ||
+      this.body.y < -10 ||
+      this.body.x < -10) {
+      this.kill()
+      this.reset(Math.floor(Math.random() * game.world.width), Math.floor(Math.random() * (game.world.height * 0.75)))
+    }
   }
 }
 
