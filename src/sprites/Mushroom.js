@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import {Pistol} from '../weapons/Weapon'
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
@@ -13,14 +14,17 @@ class Mushroom extends Phaser.Sprite {
     this.body.collideWorldBounds = true
     this.body.bounce.setTo(1, 1)
     this.cursors = this.game.input.keyboard.createCursorKeys()
-    this.boomBoom = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.weapon = new Pistol(this.game, this)
   }
 
   update () {
+    console.log(this.rotation)
+    console.log(this.angle)
     this.body.angularAcceleration = 0
 
     if (this.cursors.up.isDown) {
-      this.game.physics.arcade.accelerationFromRotation(this.rotation, 50, this.body.acceleration)
+      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity);
     } else {
       this.body.acceleration.set(0)
     }
@@ -31,9 +35,10 @@ class Mushroom extends Phaser.Sprite {
       this.body.angularAcceleration = 200
     }
 
-    if (this.boomBoom.isDown) {
-      this.game.physics.arcade.accelerationFromRotation(this.rotation, -500, this.body.acceleration)
+    if (this.spaceKey.isDown){
+      this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
     }
+
   }
 }
 
