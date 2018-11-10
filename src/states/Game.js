@@ -13,8 +13,8 @@ export default class extends Phaser.State {
     this.game.add.sprite(0,0,'background')
     this.mushroom = new Mushroom({
       game: this.game,
-      x: 32,
-      y: 32,
+      x: 300,
+      y: 399,
       asset: 'mushroom'
     })
     
