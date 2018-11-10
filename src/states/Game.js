@@ -16,7 +16,7 @@ export default class extends Phaser.State {
       y: 32,
       asset: 'mushroom'
     })
-
+    
     this.game.add.existing(this.mushroom)
   }
 
