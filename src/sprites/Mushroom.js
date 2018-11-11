@@ -1,5 +1,7 @@
 import Phaser from 'phaser'
-import {Pistol} from '../weapons/Weapon'
+import { Pistol } from '../weapons/Weapon'
+
+let setTurn, clientName
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
@@ -13,30 +15,59 @@ class Mushroom extends Phaser.Sprite {
     this.body.drag = { x: 150, y: 150 }
     this.body.collideWorldBounds = false
     this.cursors = this.game.input.keyboard.createCursorKeys()
-    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
     this.weapon = new Pistol(this.game, this)
 
-    
-    this.size = new Phaser.Rectangle();
-    this.game.world.setBounds(0, 0, 1400, 799);
-    this.size.setTo(0, 0, 1200, 670);
-    this.game.camera.focusOnXY(700, 399);
+    this.size = new Phaser.Rectangle()
+    this.game.world.setBounds(0, 0, 1400, 799)
+    this.size.setTo(0, 0, 1200, 670)
+    this.game.camera.focusOnXY(700, 399)
     this.zoomAmount = 0.002
 
-    this.style = { font: "12px Arial", fill: "#ffffff", wordWrap: true, wordWrapWidth: this.body.width, align: "center" }
-    this.text = this.game.add.text(0, 0, "Player Name", this.style);
-    this.text.anchor.set(0.5);
+    this.style = { font: '12px Arial', fill: '#ffffff', wordWrap: true, wordWrapWidth: this.body.width, align: 'center' }
+    this.text = this.game.add.text(0, 0, clientName, this.style)
+    this.text.anchor.set(0.5)
     this.text.x = Math.floor(this.body.x + this.body.width)
     this.text.y = Math.floor(this.body.y + this.body.height)
+
+    this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
+    this.ws.onopen = (evt) => {
+      this.ws.onmessage = (evt) => {
+        let data = JSON.parse(evt.data)
+        setTurn = data.Command
+
+        console.log(data)
+
+        if (data.ClientName) {
+          this.text.setText(data.ClientName)
+        }
+      }
+    }
   }
 
   update () {
     this.body.angularAcceleration = 0
 
     if (this.cursors.up.isDown) {
-      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity);
+      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
     } else {
       this.body.acceleration.set(0)
+    }
+
+    switch (setTurn) {
+      case 'LEFT_START':
+        this.body.angularAcceleration = -200
+        break
+      case 'RIGHT_START':
+        this.body.angularAcceleration = 200
+        break
+      case 'RESET':
+        this.body.angularAcceleration = 0
+        break
+      case 'FIRE':
+        this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+        setTurn = 'FIRE_STOP'
+        break
     }
 
     if (this.cursors.left.isDown) {
@@ -45,32 +76,26 @@ class Mushroom extends Phaser.Sprite {
       this.body.angularAcceleration = 200
     }
 
-    if (this.spaceKey.isDown){
-      this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity);
+    if (this.spaceKey.isDown) {
+      this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
     }
 
-    console.log(this.body.position.x)
-    console.log(this.game.camera.scale.x)
-    if (this.body.position.y > 670 - this.body.height || 
+    if (this.body.position.y > 670 - this.body.height ||
       this.body.position.x > 1200 - this.body.width ||
       this.body.position.y < 0 ||
       this.body.position.x < 0) {
-      if (this.game.camera.scale.x > 0.86)  {
+      if (this.game.camera.scale.x > 0.86) {
         this.game.camera.scale.x -= this.zoomAmount
         this.game.camera.scale.y -= this.zoomAmount
         this.game.camera.bounds.x = this.size.x * -this.game.camera.scale.x
         this.game.camera.bounds.y = this.size.y * -this.game.camera.scale.y
         this.game.camera.bounds.width = this.size.width * -this.game.camera.scale.x
         this.game.camera.bounds.height = this.size.height * -this.game.camera.scale.y
-      }
-
-      else {
+      } else {
         this.kill()
         this.reset(Math.floor(Math.random() * game.world.width), Math.floor(Math.random() * (game.world.height * 0.75)))
       }
-    }
-
-    else {
+    } else {
       if (this.game.camera.scale.x < 1) {
         this.game.camera.scale.x += this.zoomAmount
         this.game.camera.scale.y += this.zoomAmount
