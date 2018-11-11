@@ -22,7 +22,7 @@ export default class extends Phaser.State {
     })
       .then(resp => console.log(resp))
       .catch(err => console.error(err))
-    
+
     this.ws = new WebSocket(`${config.socketServer}`)
     this.ws.onopen = (evt) => {
       this.ws.onmessage = (evt) => {
@@ -49,77 +49,47 @@ export default class extends Phaser.State {
       font: '18px Arial',
       fill: '#ffffff'
     })
-
-    this.addPlayer('Sam', '123')
-    let dumbPlayer = this.addPlayer('Dummy', '321')
-    dumbPlayer.controls = false
-    // Add room code
   }
 
   update () {
-    // this.players.forEach(this.checkCollision)
-    // console.log(this.playersGroup)
-    // console.log(this.game)
-
-    for (var i = 0; i<this.players.length;i++){
-      // bullets.push(this.players[i].weapon.bullets)
-      // this.bulletGroups.add(this.players[i].weapon.bullets)
-      var thisGroup = this.game.add.group(this.players[i].weapon.bullets)
-      this.game.physics.arcade.overlap(this.playersGroup, thisGroup, this.bulletCollision)
+    for (var i = 0; i < this.players.length; i++) {
+      for (var l = 0; l < this.players.length; l++) {
+        if (i !== l) {
+          this.game.physics.arcade.overlap(this.players[i].weapon.bullets, this.players[l], this.bulletCollision, null, this)
+        }
+      }
     }
-    // console.log(bullets)
-    // for (var i=0;i<bullets.length;i++){
-    //   this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
-    // }
-    
-
-    // this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
-    // this.game.physics.arcade.overlap(this.playersGroup, this.players.forEach(function(player){return player.weapon.bullets}), this.bulletCollision)
-
   }
-  
 
-  render () {
-    // this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
-  }
+  render () {}
 
   relayCommand (data) {
     let player = this.players.filter(player => player.clientId === data.ClientId)[0]
     player.setTurn = data.Command
   }
 
-  addPlayer (name, clientId) {
-    this.mushroom = new Mushroom({
+  addPlayer (name, clientId, x = 300, y = 399) {
+    this.player = new Mushroom({
       game: this.game,
-      x: 300,
-      y: 399,
+      x: x,
+      y: y,
       asset: 'mushroom',
       name: name,
       clientId: clientId
     })
 
-    this.players.push(this.mushroom)
-    this.playersGroup.add(this.mushroom)
-    this.game.add.existing(this.mushroom)
-    console.log(this.mushroom.weapon.bulletManager)
-    console.log(this.mushroom)
+    this.players.push(this.player)
+    this.playersGroup.add(this.player)
 
-    return this.mushroom
+    this.game.add.existing(this.player)
+
+    return this.player
   }
 
-  checkCollision (playerObject) {
-    // console.log(playerObject)
-    this.game.physics.arcade.collide(playerObject,playerObject.weapon.bullets, this.bulletCollision)
+  bulletCollision (player, bullet) {
+    bullet.kill()
+    player.text.kill()
+    player.myHealthBar.kill()
+    player.kill()
   }
-
-  bulletCollision (playerObject, bullet) {
-    //reduce health please
-    console.log("Bullets")
-    if(playerObject.weapon != bullet.data.bulletManager){
-      // this.playerObject.takeDamage(25)
-      bullet.kill()
-    }
-  }
-  
-  
 }
