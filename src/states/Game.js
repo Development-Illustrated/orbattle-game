@@ -5,7 +5,7 @@ import Asteroid from '../sprites/Asteroid'
 export default class extends Phaser.State {
   init () {
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
-    this.game.physics.arcade.gravity.y = 200
+    this.game.physics.arcade.gravity.y = 0
   }
 
   preload () {
@@ -24,7 +24,7 @@ export default class extends Phaser.State {
 
     this.game.add.existing(this.asteroids)
 
-    for (var i = 0; i < 16; i++)
+    for (var i = 0; i < 20; i++)
     {
       this.asteroid = new Asteroid({
         game: this.game,
@@ -39,8 +39,15 @@ export default class extends Phaser.State {
     this.game.add.existing(this.asteroids)
   }
 
-  update () {
+  update() {
+    this.game.physics.arcade.collide(this.asteroids, this.asteroids)
+    this.game.physics.arcade.collide(this.mushroom, this.asteroids, this.getHit)
   }
+
+  getHit() {
+    
+  }
+
 
   render () {
     this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
