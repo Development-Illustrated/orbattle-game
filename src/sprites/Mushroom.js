@@ -1,14 +1,7 @@
 import Phaser from 'phaser'
 import { Pistol } from '../weapons/Weapon'
 
-let setTurn
-window.ws = new WebSocket(`ws://192.168.1.117:8000/ws`)
-window.ws.onopen = (evt) => {
-  window.ws.onmessage = (evt) => {
-    console.log(JSON.parse(evt.data))
-    setTurn = JSON.parse(evt.data).Command
-  }
-}
+let setTurn, clientName
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset }) {
@@ -29,9 +22,27 @@ class Mushroom extends Phaser.Sprite {
     this.game.world.setBounds(0, 0, 1400, 799)
     this.size.setTo(0, 0, 1200, 670)
     this.game.camera.focusOnXY(700, 399)
-    this.zoomAmount = 0.003
+    this.zoomAmount = 0.002
 
-    this.setTurn = null
+    this.style = { font: '12px Arial', fill: '#ffffff', wordWrap: true, wordWrapWidth: this.body.width, align: 'center' }
+    this.text = this.game.add.text(0, 0, clientName, this.style)
+    this.text.anchor.set(0.5)
+    this.text.x = Math.floor(this.body.x + this.body.width)
+    this.text.y = Math.floor(this.body.y + this.body.height)
+
+    this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
+    this.ws.onopen = (evt) => {
+      this.ws.onmessage = (evt) => {
+        let data = JSON.parse(evt.data)
+        setTurn = data.Command
+
+        console.log(data)
+
+        if (data.ClientName) {
+          this.text.setText(data.ClientName)
+        }
+      }
+    }
   }
 
   update () {
@@ -44,17 +55,18 @@ class Mushroom extends Phaser.Sprite {
     }
 
     switch (setTurn) {
-      case 'LEFT':
+      case 'LEFT_START':
         this.body.angularAcceleration = -200
         break
-      case 'RIGHT':
+      case 'RIGHT_START':
         this.body.angularAcceleration = 200
-        break
-      case 'FIRE':
-        this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
         break
       case 'RESET':
         this.body.angularAcceleration = 0
+        break
+      case 'FIRE':
+        this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+        setTurn = 'FIRE_STOP'
         break
     }
 
@@ -93,6 +105,9 @@ class Mushroom extends Phaser.Sprite {
         this.game.camera.bounds.height = this.size.height * this.game.camera.scale.y
       }
     }
+
+    this.text.x = Math.floor(this.body.x + (this.body.width / 2))
+    this.text.y = Math.floor(this.body.y)
   }
 }
 
