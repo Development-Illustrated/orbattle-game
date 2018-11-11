@@ -32,8 +32,15 @@ class Mushroom extends Phaser.Sprite {
     this.style = { font: '12px Arial', fill: '#ffffff', wordWrap: true, wordWrapWidth: this.body.width, align: 'center' }
     this.text = this.game.add.text(0, 0, clientName, this.style)
     this.text.anchor.set(0.5)
-    this.text.x = Math.floor(this.body.x + this.body.width)
-    this.text.y = Math.floor(this.body.y + this.body.height)
+    this.text.x = Math.floor(this.body.x + (this.body.width / 2))
+    this.text.y = Math.floor(this.body.y - 8)
+
+    var HealthBar = require('../prefabs/HealthBar.js');
+    this.barConfig = {width: 72, height: 6};
+    this.myHealthBar = new HealthBar(this.game, this.barConfig);
+    this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
+    this.myHealthBar.setBarColor('#1dd80d')
+    this.healthValue = 100
   }
 
   update () {
@@ -69,6 +76,7 @@ class Mushroom extends Phaser.Sprite {
 
     if (this.spaceKey.isDown) {
       this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+      this.takeDamage()
     }
 
     if (this.body.position.y > 670 - this.body.height ||
@@ -98,7 +106,15 @@ class Mushroom extends Phaser.Sprite {
     }
 
     this.text.x = Math.floor(this.body.x + (this.body.width / 2))
-    this.text.y = Math.floor(this.body.y)
+    this.text.y = Math.floor(this.body.y - 8)
+
+    this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
+  }
+
+  takeDamage(){
+    this.healthValue = this.healthValue - 5;
+    if(this.healthValue < 0) this.healthValue = 0;
+    this.myHealthBar.setPercent(this.healthValue);
   }
 }
 
