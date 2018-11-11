@@ -5,8 +5,10 @@ import config from '../config'
 export default class extends Phaser.State {
   init () {
     this.players = []
+    this.playersGroup = this.game.add.group()
+    this.bulletGroups = this.game.add.group()
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
-    // this.game.physics.arcade.gravity.y = 200
+    this.game.physics.arcade.gravity.y = 0
 
     this.roomNumber = Math.floor(1000 + Math.random() * 9000).toString()
 
@@ -50,33 +52,47 @@ export default class extends Phaser.State {
       font: '18px Arial',
       fill: '#ffffff'
     })
-
-    // Add room code
   }
 
   update () {
+    for (var i = 0; i < this.players.length; i++) {
+      for (var l = 0; l < this.players.length; l++) {
+        if (i !== l) {
+          this.game.physics.arcade.overlap(this.players[i].weapon.bullets, this.players[l], this.bulletCollision, null, this)
+        }
+      }
+    }
   }
 
-  render () {
-    // this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
-  }
+  render () {}
 
   relayCommand (data) {
     let player = this.players.filter(player => player.clientId === data.ClientId)[0]
     player.setTurn = data.Command
   }
 
-  addPlayer (name, clientId) {
-    this.mushroom = new Mushroom({
+  addPlayer (name, clientId, x = 300, y = 399) {
+    this.player = new Mushroom({
       game: this.game,
-      x: 300,
-      y: 399,
+      x: x,
+      y: y,
       asset: 'mushroom',
       name: name,
       clientId: clientId
     })
 
-    this.players.push(this.mushroom)
-    this.game.add.existing(this.mushroom)
+    this.players.push(this.player)
+    this.playersGroup.add(this.player)
+
+    this.game.add.existing(this.player)
+
+    return this.player
+  }
+
+  bulletCollision (player, bullet) {
+    bullet.kill()
+    player.text.kill()
+    player.myHealthBar.kill()
+    player.kill()
   }
 }
