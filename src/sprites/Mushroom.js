@@ -35,6 +35,7 @@ class Mushroom extends Phaser.Sprite {
     this.myHealthBar = new HealthBar(this.game, this.barConfig);
     this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
     this.myHealthBar.setBarColor('#1dd80d')
+    this.healthValue = 100
 
     this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
     this.ws.onopen = (evt) => {
@@ -84,6 +85,7 @@ class Mushroom extends Phaser.Sprite {
 
     if (this.spaceKey.isDown) {
       this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+      this.takeDamage()
     }
 
     if (this.body.position.y > 670 - this.body.height ||
@@ -116,6 +118,12 @@ class Mushroom extends Phaser.Sprite {
     this.text.y = Math.floor(this.body.y - 8)
 
     this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
+  }
+
+  takeDamage(){
+    this.healthValue = this.healthValue - 5;
+    if(this.healthValue < 0) this.healthValue = 0;
+    this.myHealthBar.setPercent(this.healthValue);
   }
 }
 
