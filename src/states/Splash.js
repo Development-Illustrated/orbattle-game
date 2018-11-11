@@ -15,9 +15,14 @@ export default class extends Phaser.State {
     //
     this.load.image('mushroom', 'assets/images/ship1.png')
     this.load.image('background', 'assets/images/background.png')
+    this.load.image('logo', 'assets/images/orbattle_logo.png')
+    this.load.image('start_button', 'assets/images/start_button.png')
+
+    this.load.audio('scattershot', 'assets/music/scattershot.mp3')
   }
 
   create () {
-    this.state.start('Game')
+    this.state.start('Menu')
+    // this.state.start('Game')
   }
 }
