@@ -8,6 +8,8 @@ class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset, name, clientId }) {
     super(game, x, y, asset)
 
+    this.controls = true
+
     clientName = name
     this.clientName = name
     this.clientId = clientId
@@ -17,7 +19,7 @@ class Mushroom extends Phaser.Sprite {
     this.game = game
     
     this.game.physics.enable(this)
-    this.body.gravity.y = 310
+    //this.body.gravity.y = 310
     this.body.angularDrag = 100
     this.body.maxAngular = 1000
     this.body.drag = { x: 250, y: 250 }
@@ -27,8 +29,8 @@ class Mushroom extends Phaser.Sprite {
 
     // this.pistol = new Pistol(this.game, new PluginManager());
     // this.weapon = this.game.add.existing(this.pistol);
-    console.log(this.weapon = this.game.add.weapon(1000,'bullet'))
-    this.weapon.fireRate = 100
+    this.weapon = this.game.add.weapon(1000,'bullet')
+    this.weapon.fireRate = 1
     this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
     this.weapon.trackSprite(this, 14,0)
     this.weapon.trackRotation = true
@@ -56,45 +58,46 @@ class Mushroom extends Phaser.Sprite {
 
   update () {
     this.body.angularAcceleration = 0
-
-    if (this.cursors.up.isDown) {
-      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
-    } else {
-      this.body.acceleration.set(0)
-    }
-
-    switch (this.setTurn) {
-      case 'LEFT_START':
-        this.body.angularAcceleration = -200
-        break
-      case 'RIGHT_START':
-        this.body.angularAcceleration = 200
-        break
-      case 'RESET':
-        this.body.angularAcceleration = 0
-        break
-      case 'FIRE':
-       
-        if ( this.weapon.fire()){
-          this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
-          // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-        }
-        setTurn = 'FIRE_STOP'
-        break
-    }
-
-    if (this.cursors.left.isDown) {
-      this.body.angularAcceleration = -200
-    } else if (this.cursors.right.isDown) {
-      this.body.angularAcceleration = 200
-    }
-
-    if (this.spaceKey.isDown) {
-      // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-      if ( this.weapon.fire()){
-        this.game.physics.arcade.velocityFromAngle(this.angle, -500, this.body.velocity)
+    if (this.controls) {
+      if (this.cursors.up.isDown) {
+        this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
+      } else {
+        this.body.acceleration.set(0)
       }
-      
+
+      switch (this.setTurn) {
+        case 'LEFT_START':
+          this.body.angularAcceleration = -200
+          break
+        case 'RIGHT_START':
+          this.body.angularAcceleration = 200
+          break
+        case 'RESET':
+          this.body.angularAcceleration = 0
+          break
+        case 'FIRE':
+        
+          if ( this.weapon.fire()){
+            this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
+            // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+          }
+          setTurn = 'FIRE_STOP'
+          break
+      }
+
+      if (this.cursors.left.isDown) {
+        this.body.angularAcceleration = -200
+      } else if (this.cursors.right.isDown) {
+        this.body.angularAcceleration = 200
+      }
+
+      if (this.spaceKey.isDown) {
+        // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+        if ( this.weapon.fire()){
+          this.game.physics.arcade.velocityFromAngle(this.angle, -50, this.body.velocity)
+        }
+        
+      }
     }
 
     if (this.body.position.y > 670 - this.body.height ||
