@@ -25,7 +25,7 @@ class Mushroom extends Phaser.Sprite {
     this.zoomAmount = 0.002
 
     this.style = { font: '12px Arial', fill: '#ffffff', wordWrap: true, wordWrapWidth: this.body.width, align: 'center' }
-    this.text = this.game.add.text(0, 0, clientName, this.style)
+    this.text = this.game.add.text(0, 0, /*clientName*/ "Test", this.style)
     this.text.anchor.set(0.5)
     this.text.x = Math.floor(this.body.x + this.body.width)
     this.text.y = Math.floor(this.body.y + this.body.height)
