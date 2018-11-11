@@ -23,8 +23,11 @@ export default class extends Phaser.State {
 
     this.ws = new WebSocket(`${config.socketServer}`)
     this.ws.onopen = (evt) => {
+      console.log(evt)
       this.ws.onmessage = (evt) => {
+        console.log(evt)
         let data = JSON.parse(evt.data)
+        console.log(data)
         if (data.Command) {
           this.relayCommand(data)
         }
