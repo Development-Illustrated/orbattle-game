@@ -4,21 +4,23 @@ import Mushroom from '../sprites/Mushroom'
 export default class extends Phaser.State {
   init () {
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
-    this.game.physics.arcade.gravity.y = 10
+    this.game.physics.arcade.gravity.y = 200
   }
 
-  preload () { }
+  preload () {
+    this.game.time.advancedTiming = true
+  }
 
   create () {
+    this.game.add.sprite(0, 0, 'background')
     this.mushroom = new Mushroom({
       game: this.game,
-      x: 32,
-      y: 32,
+      x: 300,
+      y: 399,
       asset: 'mushroom'
     })
 
     this.game.physics.enable(this.mushroom)
-
     this.game.add.existing(this.mushroom)
   }
 
@@ -26,5 +28,6 @@ export default class extends Phaser.State {
   }
 
   render () {
+    this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
   }
 }

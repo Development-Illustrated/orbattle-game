@@ -8,9 +8,8 @@ import GameState from './states/Game'
 
 class Game extends Phaser.Game {
   constructor () {
-    const docElement = document.documentElement
-    const width = docElement.clientWidth
-    const height = docElement.clientHeight
+    const width = 1200
+    const height = 670
 
     super(width, height, Phaser.CANVAS, 'content', null)
 
