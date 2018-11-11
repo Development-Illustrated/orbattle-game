@@ -32,7 +32,8 @@ class Mushroom extends Phaser.Sprite {
     this.weapon = this.game.add.weapon(1000,'bullet')
     this.weapon.fireRate = 1
     this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
-    this.weapon.trackSprite(this, 60,0)
+    this.weapon.bulletVelocity = 50
+    this.weapon.trackSprite(this, 14,0)
     this.weapon.trackRotation = true
 
 
@@ -86,16 +87,16 @@ class Mushroom extends Phaser.Sprite {
       }
 
       if (this.cursors.left.isDown) {
-        this.body.angularAcceleration = -200
+        this.body.angularAcceleration = -500
       } else if (this.cursors.right.isDown) {
-        this.body.angularAcceleration = 200
+        this.body.angularAcceleration = 500
       }
 
       if (this.spaceKey.isDown) {
         // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
         if ( this.weapon.fire()){
           console.log("FIRE")
-          this.game.physics.arcade.velocityFromAngle(this.angle, -50, this.body.velocity)
+          this.game.physics.arcade.velocityFromAngle(this.angle, -450, this.body.velocity)
         }
         
       }

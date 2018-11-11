@@ -61,35 +61,17 @@ export default class extends Phaser.State {
     // console.log(this.playersGroup)
     // console.log(this.game)
 
-    // this.game.physics.arcade.collide(this.playersGroup)
-
-    // this.players.forEach( function (playerObject) {
-    //   console.log(playerObject)
-    //   playerObject.weapon.bullets.forEach( function (bullet){
-    //     this.game.physics.arcade.collide(bullet,this.playersGroup, this.bulletCollision)
-    //   }).bind(this)
-      
-    // }).bind(this)
-
-    // this.game.physics.arcade.collide(this.mushroom, this.mushroom.weapon.bullets, this.bulletCollision)
-    // console.log(this.players)
-    // console.log(this.bulletGroups)
-
-    // this.players.forEach( function(player){
-    //   this.bulletGroups.add(player.weapon.bullets)
-    // }).bind(this)
-    var bullets = []
     for (var i = 0; i<this.players.length;i++){
-      bullets.push(this.players[i].weapon.bullets)
-      this.bulletGroups.add(this.players[i].weapon.bullets)
+      // bullets.push(this.players[i].weapon.bullets)
+      // this.bulletGroups.add(this.players[i].weapon.bullets)
+      var thisGroup = this.game.add.group(this.players[i].weapon.bullets)
+      this.game.physics.arcade.overlap(this.playersGroup, thisGroup, this.bulletCollision)
     }
-    console.log(bullets)
-    for (var i=0;i<bullets.length;i++){
-      this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
-    }
-    // bullets.push(this.players.forEach(function(player){return player.weapon.bullets}))
-
-    // bullets.forEach(function(bulletGroup){this.game.physics.arcade.overlap(this.playersGroup, bulletGroup, this.bulletCollision)}).bind(this)
+    // console.log(bullets)
+    // for (var i=0;i<bullets.length;i++){
+    //   this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
+    // }
+    
 
     // this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
     // this.game.physics.arcade.overlap(this.playersGroup, this.players.forEach(function(player){return player.weapon.bullets}), this.bulletCollision)
@@ -119,7 +101,6 @@ export default class extends Phaser.State {
     this.players.push(this.mushroom)
     this.playersGroup.add(this.mushroom)
     this.game.add.existing(this.mushroom)
-    this.bulletGroups.add(this.mushroom.weapon.bullets)
     console.log(this.mushroom.weapon.bulletManager)
     console.log(this.mushroom)
 
