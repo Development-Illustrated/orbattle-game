@@ -10,25 +10,24 @@ class Mushroom extends Phaser.Sprite {
 
     this.anchor.setTo(0.5)
     this.game = game
+    
     this.game.physics.enable(this)
+    this.body.gravity.y = 310
     this.body.angularDrag = 100
     this.body.maxAngular = 1000
-    this.body.drag = { x: 150, y: 150 }
+    this.body.drag = { x: 250, y: 250 }
     this.body.collideWorldBounds = false
     this.cursors = this.game.input.keyboard.createCursorKeys()
     this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     // this.pistol = new Pistol(this.game, new PluginManager());
     // this.weapon = this.game.add.existing(this.pistol);
-    console.log(this.weapon = this.game.add.weapon(100,'bullet'));
-    this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    this.weapon.trackSprite(this, 14,0);
-    this.weapon.trackRotation = true;
-    
-    // this.weapon = this.game.add.weapon(10,'bullet');
-    // this.weapon.fireFrom.set(10,5);
-    this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
-    this.weapon = new Pistol(this.game, this)
+    console.log(this.weapon = this.game.add.weapon(1000,'bullet'))
+    this.weapon.fireRate = 100
+    this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+    this.weapon.trackSprite(this, 14,0)
+    this.weapon.trackRotation = true
+
 
     this.size = new Phaser.Rectangle()
     this.game.world.setBounds(0, 0, 1400, 799)
@@ -48,7 +47,7 @@ class Mushroom extends Phaser.Sprite {
         let data = JSON.parse(evt.data)
         setTurn = data.Command
 
-        console.log(data)
+        //console.log(data)
 
         if (data.ClientName) {
           this.text.setText(data.ClientName)
@@ -77,7 +76,11 @@ class Mushroom extends Phaser.Sprite {
         this.body.angularAcceleration = 0
         break
       case 'FIRE':
-        this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+       
+        if ( this.weapon.fire()){
+          this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
+          // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+        }
         setTurn = 'FIRE_STOP'
         break
     }
@@ -90,8 +93,10 @@ class Mushroom extends Phaser.Sprite {
 
     if (this.spaceKey.isDown) {
       // this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-      this.game.physics.arcade.velocityFromAngle(this.angle, -100, this.body.velocity)
-      this.weapon.fire()
+      if ( this.weapon.fire()){
+        this.game.physics.arcade.velocityFromAngle(this.angle, -500, this.body.velocity)
+      }
+      
     }
 
     if (this.body.position.y > 670 - this.body.height ||
