@@ -7,17 +7,19 @@ export default class extends Phaser.State {
     this.game.physics.arcade.gravity.y = 200
   }
 
-  preload () { }
+  preload () {
+    this.game.time.advancedTiming = true
+  }
 
   create () {
-    this.game.add.sprite(0,0,'background')
+    this.game.add.sprite(0, 0, 'background')
     this.mushroom = new Mushroom({
       game: this.game,
       x: 300,
       y: 399,
       asset: 'mushroom'
     })
-    
+
     this.game.add.existing(this.mushroom)
   }
 
@@ -25,5 +27,6 @@ export default class extends Phaser.State {
   }
 
   render () {
+    this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
   }
 }
