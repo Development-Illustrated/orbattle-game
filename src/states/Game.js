@@ -79,12 +79,20 @@ export default class extends Phaser.State {
     //   this.bulletGroups.add(player.weapon.bullets)
     // }).bind(this)
     var bullets = []
-    bullets.push(this.players.forEach(function(player){return player.weapon.bullets}))
+    for (var i = 0; i<this.players.length;i++){
+      bullets.push(this.players[i].weapon.bullets)
+      this.bulletGroups.add(this.players[i].weapon.bullets)
+    }
+    console.log(bullets)
+    for (var i=0;i<bullets.length;i++){
+      this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
+    }
+    // bullets.push(this.players.forEach(function(player){return player.weapon.bullets}))
 
-    bullets.forEach(function(bulletGroup){this.game.physics.arcade.overlap(this.playersGroup, bulletGroup, this.bulletCollision)}).bind(this)
-    
-    this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
-    this.game.physics.arcade.overlap(this.playersGroup, this.players.forEach(function(player){return player.weapon.bullets}), this.bulletCollision)
+    // bullets.forEach(function(bulletGroup){this.game.physics.arcade.overlap(this.playersGroup, bulletGroup, this.bulletCollision)}).bind(this)
+
+    // this.game.physics.arcade.overlap(this.playersGroup, this.bulletGroups, this.bulletCollision)
+    // this.game.physics.arcade.overlap(this.playersGroup, this.players.forEach(function(player){return player.weapon.bullets}), this.bulletCollision)
 
   }
   
