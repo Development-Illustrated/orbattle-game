@@ -1,11 +1,16 @@
 import Phaser from 'phaser'
 import { Pistol } from '../weapons/Weapon'
 
-let setTurn, clientName
+let clientName
 
 class Mushroom extends Phaser.Sprite {
-  constructor ({ game, x, y, asset }) {
+  constructor ({ game, x, y, asset, name, clientId }) {
     super(game, x, y, asset)
+
+    clientName = name
+    this.clientName = name
+    this.clientId = clientId
+    this.setTurn = ''
 
     this.anchor.setTo(0.5)
     this.game = game
@@ -36,20 +41,6 @@ class Mushroom extends Phaser.Sprite {
     this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
     this.myHealthBar.setBarColor('#1dd80d')
     this.healthValue = 100
-
-    this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
-    this.ws.onopen = (evt) => {
-      this.ws.onmessage = (evt) => {
-        let data = JSON.parse(evt.data)
-        setTurn = data.Command
-
-        console.log(data)
-
-        if (data.ClientName) {
-          this.text.setText(data.ClientName)
-        }
-      }
-    }
   }
 
   update () {
@@ -61,7 +52,7 @@ class Mushroom extends Phaser.Sprite {
       this.body.acceleration.set(0)
     }
 
-    switch (setTurn) {
+    switch (this.setTurn) {
       case 'LEFT_START':
         this.body.angularAcceleration = -200
         break
@@ -73,7 +64,7 @@ class Mushroom extends Phaser.Sprite {
         break
       case 'FIRE':
         this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-        setTurn = 'FIRE_STOP'
+        this.setTurn = 'FIRE_STOP'
         break
     }
 
