@@ -1,6 +1,6 @@
 export default {
   localStorageName: 'phaseres6webpack',
   webfonts: ['Bangers'],
-  httpServer: 'http://localhost:6969',
-  socketServer: 'ws://localhost:8000/ws'
+  httpServer: 'http://orbattle.orgasmorstroke.com:6969',
+  socketServer: 'ws://orbattle.orgasmorstroke.com:8000/ws'
 }

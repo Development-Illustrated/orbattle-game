@@ -4,8 +4,9 @@ import config from '../config'
 
 export default class extends Phaser.State {
   init () {
+    this.players = []
     this.game.physics.startSystem(Phaser.Physics.ARCADE)
-    this.game.physics.arcade.gravity.y = 200
+    // this.game.physics.arcade.gravity.y = 200
 
     this.roomNumber = Math.floor(1000 + Math.random() * 9000).toString()
 
@@ -24,9 +25,12 @@ export default class extends Phaser.State {
     this.ws.onopen = (evt) => {
       this.ws.onmessage = (evt) => {
         let data = JSON.parse(evt.data)
+        if (data.Command) {
+          this.relayCommand(data)
+        }
         if (data.ClientId && data.RoomId && data.ClientName) {
-          console.log(`New room join: ${data.ClientName}`)
-          this.addPlayer(data.ClientName, data.RoomId)
+          console.log(`New room join`, data.ClientName)
+          this.addPlayer(data.ClientName, data.ClientId)
         }
       }
     }
@@ -54,6 +58,11 @@ export default class extends Phaser.State {
     // this.game.debug.text(this.game.time.fps || '--', 2, 14, '#00ff00')
   }
 
+  relayCommand (data) {
+    let player = this.players.filter(player => player.clientId === data.ClientId)[0]
+    player.setTurn = data.Command
+  }
+
   addPlayer (name, clientId) {
     this.mushroom = new Mushroom({
       game: this.game,
@@ -64,6 +73,7 @@ export default class extends Phaser.State {
       clientId: clientId
     })
 
+    this.players.push(this.mushroom)
     this.game.add.existing(this.mushroom)
   }
 }

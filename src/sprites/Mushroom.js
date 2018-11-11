@@ -1,15 +1,16 @@
 import Phaser from 'phaser'
-import config from '../config'
 import { Pistol } from '../weapons/Weapon'
 
-let setTurn, clientName
+let clientName
 
 class Mushroom extends Phaser.Sprite {
   constructor ({ game, x, y, asset, name, clientId }) {
     super(game, x, y, asset)
 
     clientName = name
+    this.clientName = name
     this.clientId = clientId
+    this.setTurn = ''
 
     this.anchor.setTo(0.5)
     this.game = game
@@ -44,7 +45,7 @@ class Mushroom extends Phaser.Sprite {
       this.body.acceleration.set(0)
     }
 
-    switch (setTurn) {
+    switch (this.setTurn) {
       case 'LEFT_START':
         this.body.angularAcceleration = -200
         break
@@ -56,7 +57,7 @@ class Mushroom extends Phaser.Sprite {
         break
       case 'FIRE':
         this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-        setTurn = 'FIRE_STOP'
+        this.setTurn = 'FIRE_STOP'
         break
     }
 
