@@ -1,11 +1,15 @@
 import Phaser from 'phaser'
+import config from '../config'
 import { Pistol } from '../weapons/Weapon'
 
 let setTurn, clientName
 
 class Mushroom extends Phaser.Sprite {
-  constructor ({ game, x, y, asset }) {
+  constructor ({ game, x, y, asset, name, clientId }) {
     super(game, x, y, asset)
+
+    clientName = name
+    this.clientId = clientId
 
     this.anchor.setTo(0.5)
     this.game = game
@@ -29,20 +33,6 @@ class Mushroom extends Phaser.Sprite {
     this.text.anchor.set(0.5)
     this.text.x = Math.floor(this.body.x + this.body.width)
     this.text.y = Math.floor(this.body.y + this.body.height)
-
-    this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
-    this.ws.onopen = (evt) => {
-      this.ws.onmessage = (evt) => {
-        let data = JSON.parse(evt.data)
-        setTurn = data.Command
-
-        console.log(data)
-
-        if (data.ClientName) {
-          this.text.setText(data.ClientName)
-        }
-      }
-    }
   }
 
   update () {
