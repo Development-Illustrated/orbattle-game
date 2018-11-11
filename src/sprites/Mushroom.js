@@ -1,11 +1,16 @@
 import Phaser from 'phaser'
 import { Pistol } from '../weapons/Weapon'
 
-let setTurn, clientName
+let clientName
 
 class Mushroom extends Phaser.Sprite {
-  constructor ({ game, x, y, asset }) {
+  constructor ({ game, x, y, asset, name, clientId }) {
     super(game, x, y, asset)
+
+    clientName = name
+    this.clientName = name
+    this.clientId = clientId
+    this.setTurn = ''
 
     this.anchor.setTo(0.5)
     this.game = game
@@ -27,22 +32,15 @@ class Mushroom extends Phaser.Sprite {
     this.style = { font: '12px Arial', fill: '#ffffff', wordWrap: true, wordWrapWidth: this.body.width, align: 'center' }
     this.text = this.game.add.text(0, 0, clientName, this.style)
     this.text.anchor.set(0.5)
-    this.text.x = Math.floor(this.body.x + this.body.width)
-    this.text.y = Math.floor(this.body.y + this.body.height)
+    this.text.x = Math.floor(this.body.x + (this.body.width / 2))
+    this.text.y = Math.floor(this.body.y - 8)
 
-    this.ws = new WebSocket(`ws://ec2-3-8-101-228.eu-west-2.compute.amazonaws.com:8000/ws`)
-    this.ws.onopen = (evt) => {
-      this.ws.onmessage = (evt) => {
-        let data = JSON.parse(evt.data)
-        setTurn = data.Command
-
-        console.log(data)
-
-        if (data.ClientName) {
-          this.text.setText(data.ClientName)
-        }
-      }
-    }
+    var HealthBar = require('../prefabs/HealthBar.js');
+    this.barConfig = {width: 72, height: 6};
+    this.myHealthBar = new HealthBar(this.game, this.barConfig);
+    this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
+    this.myHealthBar.setBarColor('#1dd80d')
+    this.healthValue = 100
   }
 
   update () {
@@ -54,7 +52,7 @@ class Mushroom extends Phaser.Sprite {
       this.body.acceleration.set(0)
     }
 
-    switch (setTurn) {
+    switch (this.setTurn) {
       case 'LEFT_START':
         this.body.angularAcceleration = -200
         break
@@ -66,7 +64,7 @@ class Mushroom extends Phaser.Sprite {
         break
       case 'FIRE':
         this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
-        setTurn = 'FIRE_STOP'
+        this.setTurn = 'FIRE_STOP'
         break
     }
 
@@ -78,6 +76,7 @@ class Mushroom extends Phaser.Sprite {
 
     if (this.spaceKey.isDown) {
       this.game.physics.arcade.velocityFromAngle(this.angle, -this.weapon.recoil, this.body.velocity)
+      this.takeDamage()
     }
 
     if (this.body.position.y > 670 - this.body.height ||
@@ -107,7 +106,15 @@ class Mushroom extends Phaser.Sprite {
     }
 
     this.text.x = Math.floor(this.body.x + (this.body.width / 2))
-    this.text.y = Math.floor(this.body.y)
+    this.text.y = Math.floor(this.body.y - 8)
+
+    this.myHealthBar.setPosition(Math.floor(this.body.x + (this.body.width / 2)), Math.floor(this.body.y))
+  }
+
+  takeDamage(){
+    this.healthValue = this.healthValue - 5;
+    if(this.healthValue < 0) this.healthValue = 0;
+    this.myHealthBar.setPercent(this.healthValue);
   }
 }
 

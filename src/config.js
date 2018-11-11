@@ -1,6 +1,6 @@
 export default {
-  gameWidth: 760,
-  gameHeight: 400,
   localStorageName: 'phaseres6webpack',
-  webfonts: ['Bangers']
+  webfonts: ['Bangers'],
+  httpServer: 'http://orbattle.orgasmorstroke.com:6969',
+  socketServer: 'ws://orbattle.orgasmorstroke.com:8000/ws'
 }
